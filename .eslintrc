@@ -1,4 +1,10 @@
 {
     "extends": "airbnb-base",
-    "rules": {}
+    "rules": {
+        max-len: ["error", { "code": 140 }],
+    },
+    globals: {
+      "document": true,
+      "window": true
+    }
 }

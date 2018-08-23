@@ -20,7 +20,6 @@ class Bezier {
   }
 
   static Bernstein(i, n, t) {
-    // if(n < i) throw "Wrong";
     return Bezier.factorial(n) / (Bezier.factorial(i) * Bezier.factorial(n - i)) * (t ** i) * ((1 - t) ** (n - i));
   }
 
@@ -37,6 +36,7 @@ class Bezier {
   static distance(a, b) {
     return Math.sqrt(((a[0] - b[0]) ** 2) + ((a[1] - b[1]) ** 2));
   }
+
 
   drawDot(point) {
     this.ctx.fillRect(point[0], point[1], 1, 1);

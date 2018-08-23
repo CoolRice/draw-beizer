@@ -23,7 +23,7 @@ var Bezier = function () {
   _createClass(Bezier, [{
     key: 'drawDot',
     value: function drawDot(point) {
-      this.ctx.fillRect(point[0], point[1], 1, 1);
+      this.ctx.fillRect(point[0], point[1], 5, 5);
     }
   }, {
     key: 'calcStep',
@@ -53,7 +53,6 @@ var Bezier = function () {
   }, {
     key: 'Bernstein',
     value: function Bernstein(i, n, t) {
-      // if(n < i) throw "Wrong";
       return Bezier.factorial(n) / (Bezier.factorial(i) * Bezier.factorial(n - i)) * Math.pow(t, i) * Math.pow(1 - t, n - i);
     }
   }, {
