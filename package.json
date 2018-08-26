@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/.bin/babel index.js --out-dir dist"
+    "build": "./node_modules/.bin/babel index.js --out-dir dist",
+    "build:example": "cd example && npm start"
   },
   "keywords": [],
   "author": "",

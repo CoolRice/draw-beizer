@@ -1,6 +1,12 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9,8 +15,8 @@ var Bezier = function () {
     _classCallCheck(this, Bezier);
 
     var ctx = target.getContext('2d');
-    ctx.width = config.width;
-    ctx.height = config.height;
+    target.width = config.width;
+    target.height = config.height;
 
     this.target = target;
     this.ctx = ctx;
@@ -23,7 +29,16 @@ var Bezier = function () {
   _createClass(Bezier, [{
     key: 'drawDot',
     value: function drawDot(point) {
-      this.ctx.fillRect(point[0], point[1], 5, 5);
+      this.ctx.fillRect(point[0], point[1], 1, 1);
+    }
+  }, {
+    key: 'drawLine',
+    value: function drawLine(startPoint, endPoint) {
+      var _ctx, _ctx2;
+
+      (_ctx = this.ctx).moveTo.apply(_ctx, _toConsumableArray(startPoint));
+      (_ctx2 = this.ctx).lineTo.apply(_ctx2, _toConsumableArray(endPoint));
+      this.ctx.stroke();
     }
   }, {
     key: 'calcStep',
@@ -35,11 +50,42 @@ var Bezier = function () {
       this.step = 1 / totalLength;
     }
   }, {
+    key: 'drawControlPoints',
+    value: function drawControlPoints() {
+      var _this = this;
+
+      var prevPoint = null;
+      this.points.forEach(function (point) {
+        _this.ctx.beginPath();
+        _this.ctx.arc(point[0], point[1], 3, 0, 2 * Math.PI, true);
+        _this.ctx.stroke();
+        if (_this.config.showControlLine) {
+          if (prevPoint) {
+            _this.ctx.lineWidth = 2;
+            _this.ctx.strokeStyle = 'rgb(200,0,0)';
+            _this.drawLine(prevPoint, point);
+          }
+          prevPoint = point;
+        }
+      });
+    }
+  }, {
     key: 'draw',
     value: function draw() {
+      var _ctx3;
+
+      this.ctx.beginPath();
+      (_ctx3 = this.ctx).moveTo.apply(_ctx3, _toConsumableArray(this.points[0]));
       for (var t = 0; t <= 1; t += this.step) {
+        var _ctx4;
+
         var curvePoint = Bezier.getCurvePoint(t, this.points);
-        this.drawDot(curvePoint, this.ctx);
+        (_ctx4 = this.ctx).lineTo.apply(_ctx4, _toConsumableArray(curvePoint));
+      }
+      this.ctx.stroke();
+
+      if (this.config.showControlPoint) {
+        this.drawControlPoints();
       }
     }
   }], [{
@@ -76,15 +122,4 @@ var Bezier = function () {
   return Bezier;
 }();
 
-// export default Bezier;
-
-var c = document.getElementById('myCanvas');
-
-var points = [[0, 0], [200, 100], [100, 200], [200, 150]];
-
-var berzier = new Bezier(c, points, {
-  width: 500,
-  height: 400
-});
-
-berzier.draw();
+exports.default = Bezier;

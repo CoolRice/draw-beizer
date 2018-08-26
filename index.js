@@ -1,8 +1,8 @@
 class Bezier {
   constructor(target, points, config) {
     const ctx = target.getContext('2d');
-    ctx.width = config.width;
-    ctx.height = config.height;
+    target.width = config.width;
+    target.height = config.height;
 
     this.target = target;
     this.ctx = ctx;
@@ -42,6 +42,11 @@ class Bezier {
     this.ctx.fillRect(point[0], point[1], 1, 1);
   }
 
+  drawLine(startPoint, endPoint) {
+    this.ctx.moveTo(...startPoint);
+    this.ctx.lineTo(...endPoint);
+    this.ctx.stroke();
+  }
 
   calcStep() {
     let totalLength = 0;
@@ -51,23 +56,36 @@ class Bezier {
     this.step = 1 / totalLength;
   }
 
+  drawControlPoints() {
+    let prevPoint = null;
+    this.points.forEach((point) => {
+      this.ctx.beginPath();
+      this.ctx.arc(point[0], point[1], 3, 0, 2 * Math.PI, true);
+      this.ctx.stroke();
+      if (this.config.showControlLine) {
+        if (prevPoint) {
+          this.ctx.lineWidth = 2;
+          this.ctx.strokeStyle = 'rgb(200,0,0)';
+          this.drawLine(prevPoint, point);
+        }
+        prevPoint = point;
+      }
+    });
+  }
+
   draw() {
+    this.ctx.beginPath();
+    this.ctx.moveTo(...this.points[0]);
     for (let t = 0; t <= 1; t += this.step) {
       const curvePoint = Bezier.getCurvePoint(t, this.points);
-      this.drawDot(curvePoint, this.ctx);
+      this.ctx.lineTo(...curvePoint);
+    }
+    this.ctx.stroke();
+
+    if (this.config.showControlPoint) {
+      this.drawControlPoints();
     }
   }
 }
 
-// export default Bezier;
-
-const c = document.getElementById('myCanvas');
-
-const points = [[0, 0], [200, 100], [100, 200], [200, 150]];
-
-const berzier = new Bezier(c, points, {
-  width: 500,
-  height: 400,
-});
-
-berzier.draw();
+export default Bezier;
