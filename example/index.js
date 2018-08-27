@@ -2,7 +2,7 @@ import Bezier from '../index';
 
 const c = document.getElementById('myCanvas');
 
-const points = [[150, 100], [300, 10], [450, 100], [800, 600], [100, 600]];
+const points = [[150, 100], [300, 10], [450, 100], [800, 600], [100, 600], [150, 100]];
 
 const berzier = new Bezier(c, points, {
   width: 1000,
